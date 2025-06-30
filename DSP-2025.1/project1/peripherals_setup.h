@@ -5,8 +5,10 @@
  *      Author: klysm
  */
 
-#infndef PERIPHERALS_SETUP_H_
+#ifndef PERIPHERALS_SETUP_H_
+#define PERIPHERALS_SETUP_H_
 #include "F28x_Project.h"
 
 void Setup_GPIO(void);
 
+#endif /* PERIPHERALS_SETUP_H_ */
