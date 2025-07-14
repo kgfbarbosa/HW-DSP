@@ -49,11 +49,11 @@ void Setup_DAC(void){
 
 void Setup_ePWM10(void){
     EALLOW;
-    CpuSysRegs.PCLKCR2.bit.EPWM10 = 1;           //habilitar clock
+    CpuSysRegs.PCLKCR2.bit.EPWM10 = 1;                  //habilitar clock
 
     CpuSysRegs.PCLKCR0.bit.TBCLKSYNC = 0;
 
-    EPwm10Regs.TBPRD = 5000;                         //periodo (up/down) 10Khz Clock/4/fpwm LAB PWM
+    EPwm10Regs.TBPRD = 5000;                         // (up/down) period 10Khz Clock/4/fpwm LAB PWM
 
     //Largura do pulso 50%
     EPwm10Regs.CMPA.bit.CMPA = EPwm10Regs.TBPRD >> 1;
@@ -90,35 +90,13 @@ void Setup_ePWM10(void){
 void Setup_ADC(void){
     Uint16 acqps;
 
-    // determine minimum acquisition window (in SYSCLKS) based on resolution
     if(ADC_RESOLUTION_12BIT == AdcaRegs.ADCCTL2.bit/RESOLUTION)
-        acqps = 14;                         // 75ns
-    else                                    // resolution is 16-bit
-        acpds = 63;                         // 320ns
+        acqps = 14;
+    else
+        acpds = 63;
 
     EALLOW;
     CpuSysRefs.PCLKCR13.bit.ADC_A = 1;
     AdcaRegs.ADCCTL2.bit.PRESCALE = 6;
-
-    AdcSetMode(ADC_ADCA, ADC_RESOLUTION_12BIT, ADC_SIGNALMODE_SINGLE);
-
-    AdcaRegs.ADCCTL1.bit.INTPULSEPOS = 1;   // Set pulse one cycle before the result
-    AdcaRegs.ADCCTL1.bit.ADCPWDNZ = 1;      // Power up the ADC
-    DELAY_US(1000);                         // Delay for 1ms to allow ADC timer to power up
-
-    AdcaRegs.ADCSOC0CTL.bit.CHSEL = 3;      // ADCINA3 - J3-26
-    AdcaRegs.ADCSOC0CTL.bit.ACQPS = acqps;
-    AdcaRegs.ADCSOC0CTL.bit.TRIGSEL = 0x17;
-
-    // SOC = Start of conversion
-    AdcaRegs.ADCSOC1CTL.bit.CHSEL = 4;      // ADCINA3 - J7-69
-    AdcaRegs.ADCSOC1CTL.bit.ACQPS = acqps;  // sample window is 15 SYSCLK cycles
-    AdcaRegs.ADCSOC1CTL.bit.TRIGSEL = 0x17;
-
-    AdcaRegs.ADCINTSEL1N2.bit.INT1SEL = 4;  // end of SOC1 will set INT1 flag
-    AdcaRegs.ADCINTSEL1N2.bit.INT1E = 1;    // enable INT1 flag
-    AdcaRegs.ADCINTFLGCLR.bit.ADCINT1 = 1;  // make sure INT1 flag is cleared
-
-
 
 }
