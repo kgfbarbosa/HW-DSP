@@ -68,6 +68,9 @@ main.obj: C:/ti/c2000/C2000Ware_5_01_00_00/device_support/f2837xd/common/include
 main.obj: C:/ti/c2000/C2000Ware_5_01_00_00/device_support/f2837xd/common/include/F2837xD_SysCtrl_defines.h
 main.obj: C:/ti/c2000/C2000Ware_5_01_00_00/device_support/f2837xd/common/include/F2837xD_Upp_defines.h
 main.obj: C:/ti/c2000/C2000Ware_5_01_00_00/device_support/f2837xd/common/include/F2837xD_defaultisr.h
+main.obj: C:/ti/ccs1200/ccs/tools/compiler/ti-cgt-c2000_22.6.2.LTS/include/math.h
+main.obj: C:/ti/ccs1200/ccs/tools/compiler/ti-cgt-c2000_22.6.2.LTS/include/_defs.h
+main.obj: C:/ti/ccs1200/ccs/tools/compiler/ti-cgt-c2000_22.6.2.LTS/include/machine/_limits.h
 
 ../main.c:
 
@@ -204,4 +207,10 @@ C:/ti/c2000/C2000Ware_5_01_00_00/device_support/f2837xd/common/include/F2837xD_S
 C:/ti/c2000/C2000Ware_5_01_00_00/device_support/f2837xd/common/include/F2837xD_Upp_defines.h:
 
 C:/ti/c2000/C2000Ware_5_01_00_00/device_support/f2837xd/common/include/F2837xD_defaultisr.h:
+
+C:/ti/ccs1200/ccs/tools/compiler/ti-cgt-c2000_22.6.2.LTS/include/math.h:
+
+C:/ti/ccs1200/ccs/tools/compiler/ti-cgt-c2000_22.6.2.LTS/include/_defs.h:
+
+C:/ti/ccs1200/ccs/tools/compiler/ti-cgt-c2000_22.6.2.LTS/include/machine/_limits.h:
 

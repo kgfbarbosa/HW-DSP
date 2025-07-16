@@ -57,7 +57,7 @@ SECTIONS
    #endif
 #endif   
    
-   .text            : >>RAMM0 | RAMD0 |  RAMLS0 | RAMLS1 | RAMLS2 | RAMLS3 | RAMLS4,   PAGE = 0
+   .text            : >>RAMM0 | RAMD0 |  RAMLS0 | RAMLS1 | RAMLS2 | RAMLS3,   PAGE = 0 //| RAMLS4
    .cinit           : > RAMM0,     PAGE = 0
    .pinit           : > RAMM0,     PAGE = 0
    .switch          : > RAMM0,     PAGE = 0
@@ -65,7 +65,7 @@ SECTIONS
 
    .stack           : > RAMM1,     PAGE = 1
    .ebss            : > RAMLS5,    PAGE = 1
-   .econst          : > RAMLS5,    PAGE = 1
+   .econst          : > RAMLS4,    PAGE = 0
    .esysmem         : > RAMLS5,    PAGE = 1
    Filter_RegsFile  : > RAMGS0,	   PAGE = 1
 

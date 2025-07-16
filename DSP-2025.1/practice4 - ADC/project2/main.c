@@ -3,15 +3,27 @@
 
 /**
  * main.c *
- *  Created on: Jun 25, 2025
+ *  Created on: 7/14/2025
  *      Author: klysm
  */
 
-uint32_t count = 0;         // Initialize count variable
+// Interrupt functions
 
-interrupt void isr_timer0(void); // Interrupt function
+interrupt void isr_timer0(void);            // Interrupt timer0 function
+interrupt void isr_adc(void);               // Interrupt ADC function
 
-uint16_t index = 0, sintable[400];
+
+// Variables
+
+uint32_t count = 0;                         // Initialize count variable
+uint16_t ADCIndex = 0, sinusoidalIndex = 0; // Initialize ADC index and sinusoidal index
+uint16_t sintable[400], costable[400];      // Initialize sine table and cosine table
+uint16_t sinOffset = 0, cosOffset = 0;      // Initialize offset 1 and 2
+uint16_t ADC1 = 0, ADC2 = 0;                // Initialize ADC 1 and 2
+uint16_t plot1[400], plot2[400];            // Initialize plot variables
+uint16_t *ADCa = &ADC1;                     // Initialize ADCa pointer
+uint16_t *ADCb = &ADC2;                     // Initialize ADCb pointer
+
 
 int main(void)
 {
@@ -27,19 +39,23 @@ int main(void)
     InitPieVectTable();     // Initialize the PIE vector table
 
 
-    // Interrupts
+    // Interrupts setup
 
     EALLOW; //  Enables access to protected registers
 
-    PieVectTable.TIMER0_INT = &isr_timer0;
-    PieCtrlRegs.PIEIER1.bit.INTx7 = 1; // Enables INTx7
+    PieVectTable.TIMER0_INT = &isr_timer0;  // Timer0 treatment
+    PieVectTable.ADCA1_INT = &isr_adc;      // ADC treatment
 
-    EDIS; //  Disables access to protected registers
+    PieCtrlRegs.PIEIER1.bit.INTx7 = 1;      // Enables INTx7 (Timer0 column)
+    PieCtrlRegs.PIEIER1.bit.INTx1 = 1;      // Enables INTx1 (ADC column)
+
+    EDIS;   //  Disables access to protected registers
 
     IER |= M_INT1; // Enables column 1
 
 
-    // Timer0 Configuration
+    // Modules setup
+    // Timer0 setup
 
     InitCpuTimers();        // Initialize CPU Timers
 
@@ -52,14 +68,28 @@ int main(void)
 
     Setup_GPIO();           // Custom function to configure GPIO pins as outputs
 
+
     // DAC setup
+
     Setup_DAC();
 
-    // Sin table setup
-    for (index = 0; index < 400; index++){
-        sintable[index] = (uint16_t)(1000.0*(1.0 + sin(6.28318531/400.*(float)index)));
+
+    // PWM setup
+
+    Setup_ePWM10();
+
+
+   // ADC setup
+
+    Setup_ADC();
+
+
+    // Sinusoidal tables setup
+    for (sinusoidalIndex = 0; sinusoidalIndex < 400; sinusoidalIndex++){
+        sintable[sinusoidalIndex] = (uint16_t)(1000.0*(1.0 + sin(6.28318531/400.*(float)sinusoidalIndex)));
+        costable[sinusoidalIndex] = (uint16_t)(1000.0*(1.0 + cos(6.28318531/400.*(float)sinusoidalIndex)));
     }
-    index = 0;
+    sinusoidalIndex = 0;
 
 
     EINT;                   // Enable global interrupt INTM
@@ -89,9 +119,23 @@ int main(void)
 interrupt void isr_timer0(void){
     //GpioDataRegs.GPATOGGLE.bit.GPIO31 = 1;
 
-    index = (index == 399) ? 0 : (index + 1);
+    sinusoidalIndex = (sinusoidalIndex == 399) ? 0 : (sinusoidalIndex + 1);
 
-    DacbRegs.DACVALS.all = sintable[index];
+    DacbRegs.DACVALS.all = sinOffset + sintable[sinusoidalIndex]; // Sine table output J7 pin70
+    DacbRegs.DACVALS.all = cosOffset + costable[sinusoidalIndex]; // Cosine table output J3 pin30
 
+    PieCtrlRegs.PIEACK.all = PIEACK_GROUP1;
+}
+
+interrupt void isr_adc(void){
+    ADC1 = AdcaResultRegs.ADCRESULT0; // input pin26
+    ADC2 = AdcaResultRegs.ADCRESULT1; // input pin69
+
+    ADCIndex = (ADCIndex == 399) ? 0 : (ADCIndex + 1);
+
+    plot1[ADCIndex] = *ADCa;
+    plot2[ADCIndex] = *ADCb;
+
+    AdcaRegs.ADCINTFLGCLR.bit.ADCINT1 = 1;  // Clear INT1 flag
     PieCtrlRegs.PIEACK.all = PIEACK_GROUP1;
 }
