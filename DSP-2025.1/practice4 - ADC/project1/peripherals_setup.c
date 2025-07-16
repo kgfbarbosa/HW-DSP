@@ -1,7 +1,7 @@
 /*
  * peripherals_setup.c
  *
- *  Created on: Jun 25, 2025
+ *  Created on: 7/14/2025
  *      Author: klysm
  */
 
@@ -32,20 +32,25 @@ void Setup_GPIO(void){
 void Setup_DAC(void){
     EALLOW; //  Enables access to protected registers
 
-    // Configure DAC-B control registers
+    // Configure DAC-A and DAC-B control registers
+    DacaRegs.DACCTL.all = 0x0001;
     DacbRegs.DACCTL.all = 0x0001;
 
-    // Set DAC-B output to mid-range
+    // Set DAC-A and DAC-B output to mid-range
+    DacaRegs.DACVALS.all = 0x0800;
     DacbRegs.DACVALS.all = 0x0800;
 
-    // Enable DAC-B output
+    // Enable DAC-A and DAC-B output
+    DacaRegs.DACOUTEN.bit.DACOUTEN = 1;                 // 0 = disable, 1 = enable
     DacbRegs.DACOUTEN.bit.DACOUTEN = 1;                 // 0 = disable, 1 = enable
 
-    // DAC-B lock control register
+    // DAC-A and DAC-B lock control register
+    DacaRegs.DACLOCK.all = 0x0000;
     DacbRegs.DACLOCK.all = 0x0000;
 
     EDIS; //  Disables access to protected registers
 }
+
 
 void Setup_ePWM10(void){
     EALLOW;
@@ -91,13 +96,13 @@ void Setup_ADC(void){
     Uint16 acqps;
 
     // determine minimum acquisition window (in SYSCLKS) based on resolution
-    if(ADC_RESOLUTION_12BIT == AdcaRegs.ADCCTL2.bit/RESOLUTION)
+    if(ADC_RESOLUTION_12BIT == AdcaRegs.ADCCTL2.bit.RESOLUTION)
         acqps = 14;                         // 75ns
     else                                    // resolution is 16-bit
-        acpds = 63;                         // 320ns
+        acqps = 63;                         // 320ns
 
     EALLOW;
-    CpuSysRefs.PCLKCR13.bit.ADC_A = 1;
+    CpuSysRegs.PCLKCR13.bit.ADC_A = 1;
     AdcaRegs.ADCCTL2.bit.PRESCALE = 6;
 
     AdcSetMode(ADC_ADCA, ADC_RESOLUTION_12BIT, ADC_SIGNALMODE_SINGLE);
@@ -115,7 +120,7 @@ void Setup_ADC(void){
     AdcaRegs.ADCSOC1CTL.bit.ACQPS = acqps;  // sample window is 15 SYSCLK cycles
     AdcaRegs.ADCSOC1CTL.bit.TRIGSEL = 0x17;
 
-    AdcaRegs.ADCINTSEL1N2.bit.INT1SEL = 4;  // end of SOC1 will set INT1 flag
-    AdcaRegs.ADCINTSEL1N2.bit.INT1E = 1;    // enable INT1 flag
-    AdcaRegs.ADCINTFLGCLR.bit.ADCINT1 = 1;  // make sure INT1 flag is cleared
+    AdcaRegs.ADCINTSEL1N2.bit.INT1SEL = 0x01;   // end of SOC1 will set INT1 flag (source)
+    AdcaRegs.ADCINTSEL1N2.bit.INT1E = 1;        // enable INT1 flag
+    AdcaRegs.ADCINTFLGCLR.bit.ADCINT1 = 1;      // make sure INT1 flag is cleared
 }
