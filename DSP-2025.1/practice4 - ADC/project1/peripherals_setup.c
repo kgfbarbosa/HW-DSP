@@ -118,7 +118,4 @@ void Setup_ADC(void){
     AdcaRegs.ADCINTSEL1N2.bit.INT1SEL = 4;  // end of SOC1 will set INT1 flag
     AdcaRegs.ADCINTSEL1N2.bit.INT1E = 1;    // enable INT1 flag
     AdcaRegs.ADCINTFLGCLR.bit.ADCINT1 = 1;  // make sure INT1 flag is cleared
-
-
-
 }
