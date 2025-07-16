@@ -57,7 +57,7 @@ SECTIONS
    #endif
 #endif   
    
-   .text            : >>RAMM0 | RAMD0 |  RAMLS0 | RAMLS1 | RAMLS2 | RAMLS3,   PAGE = 0 //| RAMLS4
+   .text            : >>RAMM0 | RAMD0 |  RAMLS0 | RAMLS1 | RAMLS2 | RAMLS3,   PAGE = 0 // | RAMLS4
    .cinit           : > RAMM0,     PAGE = 0
    .pinit           : > RAMM0,     PAGE = 0
    .switch          : > RAMM0,     PAGE = 0
