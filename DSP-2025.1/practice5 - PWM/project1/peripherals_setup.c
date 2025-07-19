@@ -52,6 +52,38 @@ void Setup_DAC(void){
 }
 
 
+void Setup_ePWM1(void){
+    EALLOW;
+    CpuSysRegs.PCLKCR2.bit.EPWM1 = 1;                // Enable module clock
+
+    CpuSysRegs.PCLKCR0.bit.TBCLKSYNC = 0;            // Disable counter clock
+
+    EPwm1Regs.TBPRD = 50000;                         // Period Fosc/2*Fpwm or Fosc/4*Fpwm
+    EPwm1Regs.TBPHS.bit.TBPHS = 0;                   // Phase is 0
+    EPwm1Regs.TBCTL.bit.SYNCOSEL = TB_SYNC_DISABLE;
+    EPwm1Regs.TBCTR = 0;                             // Clear counter
+    EPwm1Regs.TBCTL.bit.CTRMODE = TB_COUNT_UPDOWN;   // Count up/down
+    EPwm1Regs.TBCTL.bit.PHSEN = TB_DISABLE;          // Disable phase loading
+    EPwm1Regs.TBCTL.bit.HSPCLKDIV = TB_DIV1;         // Prescale
+    EPwm1Regs.TBCTL.bit.CLKDIV = TB_DIV1;
+
+    EPwm1Regs.CMPA.bit.CMPA = EPwm1Regs.TBPRD >> 1;  // Duty 50%
+
+    EPwm1Regs.CMPCTL.bit.SHDWAMODE = CC_SHADOW;      // Load registers every ZERO
+    EPwm1Regs.CMPCTL.bit.LOADAMODE = CC_CTR_ZERO_PRD;
+    EPwm1Regs.CMPCTL.bit.SHDWBMODE = CC_SHADOW;      // Load registers every ZERO
+    EPwm1Regs.CMPCTL.bit.LOADBMODE = CC_CTR_ZERO_PRD;
+
+    EPwm1Regs.AQCTLA.bit.CAU = AQ_CLEAR;             // Set actions for EPwm1A
+    EPwm1Regs.AQCTLA.bit.CAU = AQ_SET;
+    EPwm1Regs.AQCTLA.bit.CAU = AQ_NO_ACTION;
+    EPwm1Regs.AQCTLA.bit.CAU = AQ_NO_ACTION;
+
+    CpuSysRegs.PCLKCR0.bit.TBCLKSYNC = 1;            // Enable counter clock
+    EDIS;
+}
+
+
 void Setup_ePWM10(void){
     EALLOW;
     CpuSysRegs.PCLKCR2.bit.EPWM10 = 1;           //habilitar clock
