@@ -72,6 +72,9 @@ main.obj: ../sogi.h
 main.obj: C:/ti/ccs1200/ccs/tools/compiler/ti-cgt-c2000_22.6.2.LTS/include/math.h
 main.obj: C:/ti/ccs1200/ccs/tools/compiler/ti-cgt-c2000_22.6.2.LTS/include/_defs.h
 main.obj: C:/ti/ccs1200/ccs/tools/compiler/ti-cgt-c2000_22.6.2.LTS/include/machine/_limits.h
+main.obj: ../CLA_config.h
+main.obj: ../CLA.h
+main.obj: C:/ti/controlSUITE/libs/math/CLAmath/v4_02_00_00/include/CLAMath.h
 
 ../main.c:
 
@@ -216,4 +219,10 @@ C:/ti/ccs1200/ccs/tools/compiler/ti-cgt-c2000_22.6.2.LTS/include/math.h:
 C:/ti/ccs1200/ccs/tools/compiler/ti-cgt-c2000_22.6.2.LTS/include/_defs.h:
 
 C:/ti/ccs1200/ccs/tools/compiler/ti-cgt-c2000_22.6.2.LTS/include/machine/_limits.h:
+
+../CLA_config.h:
+
+../CLA.h:
+
+C:/ti/controlSUITE/libs/math/CLAmath/v4_02_00_00/include/CLAMath.h:
 

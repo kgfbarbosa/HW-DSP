@@ -78,13 +78,19 @@ void Setup_GPIO(void){
     GpioCtrlRegs.GPEMUX2.bit.GPIO159 = 1;
     GpioCtrlRegs.GPEPUD.bit.GPIO159 = 1;
 
-    // IO 14 (J8 - 74)
+    // GPIO 14 (J8 - 74)
     GpioCtrlRegs.GPAGMUX1.bit.GPIO14 = 0;
-    GpioCtrlRegs.GPAMUX1.bit.GPIO14 = 1;
+    GpioCtrlRegs.GPAMUX1.bit.GPIO14 = 0;
     GpioCtrlRegs.GPAPUD.bit.GPIO14 = 1;
     // GpioCtrlRegs.GPADIR.bit.GPIO14 = 1;               // only valid for GPIO 14 -> output
-    GpioCtrlRegs.GPACSEL1.bit.GPIO5 = GPIO_MUX_CPU1;    // Chooses CPU1
+    GpioCtrlRegs.GPACSEL2.bit.GPIO14 = GPIO_MUX_CPU1;    // Chooses CPU1
 
+    // GPIO 15 (J8 - 73)
+    GpioCtrlRegs.GPAGMUX1.bit.GPIO15 = 0;
+    GpioCtrlRegs.GPAMUX1.bit.GPIO15 = 0;
+    GpioCtrlRegs.GPAPUD.bit.GPIO15 = 1;
+    // GpioCtrlRegs.GPADIR.bit.GPIO15 = 1;
+    GpioCtrlRegs.GPACSEL2.bit.GPIO15 = GPIO_MUX_CPU1CLA;
 
     EDIS; //  Disables access to protected registers
 }

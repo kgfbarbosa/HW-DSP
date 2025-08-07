@@ -1,3 +1,5 @@
+"./CLA_TASKs.obj"
+"./CLA_config.obj"
 "./F2837xD_Adc.obj"
 "./F2837xD_CodeStartBranch.obj"
 "./F2837xD_CpuTimers.obj"
@@ -12,6 +14,8 @@
 "./main.obj"
 "./peripherals_setup.obj"
 "./sogi.obj"
-"../2837x_RAM_lnk_cpu1.cmd"
+"../2837xD_RAM_CLA_lnk_cpu1.cmd"
+"../2837x_c1bootROM_CLADataROMSymbols_fpu32.lib"
 "../F2837xD_Headers_nonBIOS_cpu1.cmd"
+"../cla1_math_library_datarom_fpu32.lib"
 -llibc.a

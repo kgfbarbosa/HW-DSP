@@ -27,8 +27,14 @@ float ampl = 0.5;
 volatile SPLL_SOGI cla1_pll;
 volatile float vrede_CLA;
 volatile float phase_CLA = 0;
-volatile float amp_CLA = 0.5;
+volatile float ampl_CLA = 0.5;
 volatile uint32_t count_task = 0;
+
+#pragma DATA_SECTION(vrede_CLA, "Cla1ToCpuMsgRAM");
+#pragma DATA_SECTION(cla1_pll, "CLADataLS0");
+#pragma DATA_SECTION(phase_CLA, "CLADataLS0");
+#pragma DATA_SECTION(ampl_CLA, "CLADataLS0");
+#pragma DATA_SECTION(count_task, "CLADataLS0");
 
 float plot1[512], plot2[512];
 float *padc1 = &vrede;
@@ -53,8 +59,8 @@ int main(void)
 
     EALLOW; //  Enables access to protected registers
 
-    PieVectTable.TIMER0_INT = &isr_timer0;  // Timer0 treatment
-    PieVectTable.ADCA1_INT = &isr_adc;      // ADC treatment
+    PieVectTable.TIMER0_INT = &ISR_Timer0;  // Timer0 treatment
+    PieVectTable.ADCA1_INT = &ISR_Adc;      // ADC treatment
 
     PieCtrlRegs.PIEIER1.bit.INTx7 = 1;      // Enables INTx7 (Timer0 column)
     PieCtrlRegs.PIEIER1.bit.INTx1 = 1;      // Enables INTx1 (ADC column)
@@ -99,9 +105,18 @@ int main(void)
     Setup_ADC();
 
 
+    // CLA setup
+    CLA1_ConfigCLAMemory();
+    CLA1_InitCpu1Cla1();
+
+
     // SOGI setup
+    // CPU
     SOGI_init(60, 32.5520833E-06, &v_pll);
     SOGI_coeff_update(32.5520833E-06, 376.99112, 0.7, &v_pll);
+    // CLA
+    SOGI_init(60, 32.5520833E-06, &cla1_pll);
+    SOGI_coeff_update(32.5520833E-06, 376.99112, 0.7, &cla1_pll);
 
 
     EINT;                   // Enable global interrupt INTM
@@ -145,13 +160,13 @@ interrupt void ISR_Adc(void){
 
     EPwm7Regs.CMPA.bit.CMPA = (uint16_t) (1627.0 * (1.0 + ampl + __sin(v_pll.theta[1] + phase)));
 
-    EALLOW;
-    DacbRegs.DACVALS.bit.DACVALS = (uint16_t) (2047.0 * (1.0 + ampl + __sin(v_pll.theta[1] + phase)));
-    EDIS;
+    //EALLOW;
+    //DacbRegs.DACVALS.bit.DACVALS = (uint16_t) (2047.0 * (1.0 + ampl + __sin(v_pll.theta[1] + phase)));
+    //EDIS;
 
-    plot1[index] = *padc1;
-    plot2[index] = *padc2;
-    index = (index == 511) ? 0 : (index + 1);
+    //plot1[index] = *padc1;
+    //plot2[index] = *padc2;
+    //index = (index == 511) ? 0 : (index + 1);
 
     AdcaRegs.ADCINTFLGCLR.bit.ADCINT1 = 1;  // Clear INT1 flag
     PieCtrlRegs.PIEACK.all = PIEACK_GROUP1;
@@ -168,29 +183,29 @@ interrupt void CLA1_isr1(void){
 }
 
 interrupt void CLA1_isr2(void){
-    asm("ESTOP0");
+    asm(" ESTOP0");
 }
 
 interrupt void CLA1_isr3(void){
-    asm("ESTOP0");
+    asm(" ESTOP0");
 }
 
 interrupt void CLA1_isr4(void){
-    asm("ESTOP0");
+    asm(" ESTOP0");
 }
 
 interrupt void CLA1_isr5(void){
-    asm("ESTOP0");
+    asm(" ESTOP0");
 }
 
 interrupt void CLA1_isr6(void){
-    asm("ESTOP0");
+    asm(" ESTOP0");
 }
 
 interrupt void CLA1_isr7(void){
-    asm("ESTOP0");
+    asm(" ESTOP0");
 }
 
 interrupt void CLA1_isr8(void){
-    asm("ESTOP0");
+    asm(" ESTOP0");
 }
